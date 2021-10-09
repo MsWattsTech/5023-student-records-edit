@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for
 
 from app import app, db
 from app.models import Student, Grade, House
-from app.forms import AddHouseForm, AddStudentForm, AddGradeForm, EditGradeForm, EditHouseForm
+from app.forms import AddHouseForm, AddStudentForm, AddGradeForm, EditGradeForm, EditHouseForm, EditStudentForm
 
 @app.route('/')
 def index():
@@ -40,11 +40,19 @@ def student_details(id):
 def student_edit(id):
     # TODO: Modify this function so that the editing of a student works
     student = Student.query.get_or_404(id)
-    return render_template('student_edit.html', student = student)
+    form = EditStudentForm(obj=student)
+
+    if form.validate_on_submit():
+        form.populate_obj(obj=student)
+        db.session.commit()
+        return redirect(url_for('student_list'))
+    
+    return render_template('student_edit.html', form = form, student = student)
 
 @app.route('/student/<int:id>/delete')
 def student_delete(id):
     # TODO: Modify this function so that it retrieves and deletes student for a given id
+
     return redirect(url_for('index'))
 
 @app.route('/grade')
