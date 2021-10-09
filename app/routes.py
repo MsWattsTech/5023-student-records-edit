@@ -52,7 +52,9 @@ def student_edit(id):
 @app.route('/student/<int:id>/delete')
 def student_delete(id):
     # TODO: Modify this function so that it retrieves and deletes student for a given id
-
+    student = Student.query.get_or_404(id)
+    db.session.delete(student)
+    db.session.commit()
     return redirect(url_for('index'))
 
 @app.route('/grade')
