@@ -41,12 +41,12 @@ def student_edit(id):
     # TODO: Modify this function so that the editing of a student works
     student = Student.query.get_or_404(id)
     form = EditStudentForm(obj=student)
-
+    form.grade_id.choices = [(grade.id, grade.name) for grade in Grade.query.all()]
+    form.house_id.choices = [(house.id, house.colour) for house in House.query.all()]
     if form.validate_on_submit():
         form.populate_obj(obj=student)
         db.session.commit()
         return redirect(url_for('student_list'))
-    
     return render_template('student_edit.html', form = form, student = student)
 
 @app.route('/student/<int:id>/delete')
